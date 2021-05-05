@@ -1,5 +1,6 @@
 import './App.css';
 import React from 'react';
+import Weatherinfo from './weatherinfo/Weatherinfo';
 
 const weatherReducer = (state, action) => {
   switch (action.type) {
@@ -25,6 +26,7 @@ const weatherReducer = (state, action) => {
   }
 };
 
+
 function App() {
 
   const [weather, dispatchWeather] = React.useReducer(
@@ -33,7 +35,8 @@ function App() {
   );
 
   React.useEffect(() => {
-    dispatchWeather({type: 'WEATHER_FETCH_INIT'})
+    dispatchWeather({type: 'WEATHER_FETCH_INIT'});
+
     const positionSuccess = position => {
       getWeather(position.coords);
     };
@@ -45,9 +48,10 @@ function App() {
     navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
       
     function getWeather({latitude, longitude}) {
-      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&appid=${process.env.REACT_APP_WEATHER_KEY}`)
+      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&units=metric&appid=${process.env.REACT_APP_WEATHER_KEY}`)
         .then(response => response.json())
         .then(result => {
+          console.log(result);
           dispatchWeather({
             type: 'WEATHER_FETCH_SUCCESS',
             isLoading: false,
@@ -70,7 +74,7 @@ function App() {
 
   return (
     <>
-    {weather.isError && <p>Something went wrong...</p>}
+    {weather.isError && <p>Something went wrong... Please try again later!</p>}
     {weather.isLoading ? (
       <p>Loading...</p>
       ) : (
@@ -80,22 +84,15 @@ function App() {
   );
 }
 
-const Weatherinfo = (data) => {
-  
-  return(
-  <div>
-    <Current current={data.current}></Current>
-  </div>
-  )
-};
 
-const Current = (current) => {
-  // console.log(current);
-return (
-  <div>
-    {current.weather.map((item) => <p>{item.main}: {item.description}</p>)}
-  </div>
-)
-};
+
+// const Hourly = ({hourly}) => {
+  // console.log(hourly)
+  // return (
+    // <>
+{/*  */}
+    {/* </> */}
+  // )
+// };
 
 export default App;
