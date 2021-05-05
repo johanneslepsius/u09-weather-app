@@ -7,16 +7,18 @@ const getTime = (unixTime, type) => {
     return date.getHours() + ":00";
   case "HOUR_MINUTES":
     return `${date.getHours()}:${date.getMinutes()}`;
+  case "DAY":
+    return date.getDate();
   default:
     throw new Error();
   };
 };
 
-const Current = ({current, hourly}) => {
+
+const getUrl = id => (`http://openweathermap.org/img/wn/${id}.png`);
+
+const Current = ({current}) => {
   const [currentweather] = current.weather;
-  const getUrl = id => (`http://openweathermap.org/img/wn/${id}.png`);
-  const everyThirdHour = hourly.filter((e, i) => i % 3 === 2 && i < 24);
-  console.log(everyThirdHour);
 return (
   <div>
     <img src={getUrl(currentweather.icon)} alt=""/>
@@ -30,20 +32,9 @@ return (
       <span>Sunset: {getTime(current.sunset, "HOUR_MINUTES")}</span>
     </p>
     <p>Wind: {Math.round(current.wind_speed * 3.6)} km/h</p>
-    <p>Humidity: {current.humidity}%</p>
-    {/* <Hourly hourly={hourly}></Hourly> */}
-    {everyThirdHour.map(e => 
-      <div>
-        <img src={getUrl(e.weather[0].icon)} alt=""/>
-        <p>{getTime(e.dt, "HOUR")}</p>
-        <p key={e.weather[0].id}>{e.weather[0].main}: {e.weather[0].description}</p>
-        <p>{Math.round(e.temp)}°C</p>
-        <p>Wind: {Math.round(e.wind_speed * 3.6)} km/h</p>
-        <p>Humidity: {e.humidity}%</p>
-      </div>)}
-
+    <p>Humidity: {current.humidity}%</p> 
   </div>
 )
 };
 
-export default Current;
+export {Current, getUrl, getTime};

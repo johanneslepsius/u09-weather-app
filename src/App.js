@@ -84,15 +84,4 @@ function App() {
   );
 }
 
-
-
-// const Hourly = ({hourly}) => {
-  // console.log(hourly)
-  // return (
-    // <>
-{/*  */}
-    {/* </> */}
-  // )
-// };
-
 export default App;
