@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Weatherinfo from './weatherinfo/Weatherinfo';
 
 const weatherReducer = (state, action) => {
@@ -72,16 +72,43 @@ function App() {
     }
   }, []);
 
+  const [temptoggle, settemptoggle] = React.useState(false);
+
+  const triggertoggle = () => {
+    settemptoggle( !temptoggle );
+    console.log(temptoggle)
+  }
+
   return (
     <>
     {weather.isError && <p>Something went wrong... Please try again later!</p>}
     {weather.isLoading ? (
       <p>Loading...</p>
       ) : (
+        <>
+      <Unittoggle onToggle={triggertoggle} temptoggle={temptoggle}/>
       <Weatherinfo data={weather.data}></Weatherinfo>
+      </>
       )}
     </>
   );
+}
+
+const Unittoggle = ({onToggle, temptoggle}) => {
+  return(
+        <div onClick={onToggle} className={`temp-toggle ${temptoggle ? 'temp-toggle--checked' : ''}`}>
+            <div className="temp-toggle-container">
+                <div className="temp-toggle-check">
+                    <span>°F</span>
+                </div>
+                <div className="temp-toggle-uncheck">
+                    <span>°C</span>
+                </div>
+            </div>
+            <div className="temp-toggle-circle"></div>
+            {/* <input className="temp-toggle-input" type="checkbox" aria-label="Toggle Button" /> */}
+        </div>
+    )
 }
 
 export default App;
