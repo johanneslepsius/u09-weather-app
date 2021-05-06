@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React from 'react';
 import Weatherinfo from './weatherinfo/Weatherinfo';
 
 const weatherReducer = (state, action) => {
@@ -27,28 +27,12 @@ const weatherReducer = (state, action) => {
 };
 
 
+
+
 function App() {
 
-  const [weather, dispatchWeather] = React.useReducer(
-    weatherReducer,
-    {data: {}, isLoading: true, isError: false}
-  );
-
-  React.useEffect(() => {
-    dispatchWeather({type: 'WEATHER_FETCH_INIT'});
-
-    const positionSuccess = position => {
-      getWeather(position.coords);
-    };
-
-    const positionError = error => {
-      alert(`ERROR(${error.code}): ${error.message}`);
-    };
-
-    navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
-      
-    function getWeather({latitude, longitude}) {
-      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&units=metric&appid=${process.env.REACT_APP_WEATHER_KEY}`)
+  function getWeather({latitude, longitude}, units) {
+      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&units=${units}&appid=${process.env.REACT_APP_WEATHER_KEY}`)
         .then(response => response.json())
         .then(result => {
           console.log(result);
@@ -70,13 +54,43 @@ function App() {
     alerts
 */
     }
+
+  const [curr_position, setCurr_position] = React.useState({});
+
+  const [units, setUnits] = React.useState({temp: '°C', wind: 'km/h'})
+
+  const [weather, dispatchWeather] = React.useReducer(
+    weatherReducer,
+    {data: {}, isLoading: true, isError: false}
+  );
+
+  React.useEffect(() => {
+    dispatchWeather({type: 'WEATHER_FETCH_INIT'});
+
+    const positionSuccess = position => {
+      setCurr_position(position.coords);
+      getWeather(position.coords, 'metric');
+    };
+
+    const positionError = error => {
+      alert(`ERROR(${error.code}): ${error.message}`);
+    };
+
+    navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
   }, []);
 
   const [temptoggle, settemptoggle] = React.useState(false);
 
   const triggertoggle = () => {
     settemptoggle( !temptoggle );
-    console.log(temptoggle)
+    const newUnits = temptoggle ? ('metric') : ('imperial');
+    if (newUnits === 'metric') {
+      setUnits({temp: '°C', wind: 'km/h'});
+    } else if (newUnits === 'imperial') {
+      setUnits({temp: '°F', wind: 'mph'});
+    }
+    
+    getWeather(curr_position, newUnits);
   }
 
   return (
@@ -87,7 +101,7 @@ function App() {
       ) : (
         <>
       <Unittoggle onToggle={triggertoggle} temptoggle={temptoggle}/>
-      <Weatherinfo data={weather.data}></Weatherinfo>
+      <Weatherinfo data={weather.data} units={units}/>
       </>
       )}
     </>
