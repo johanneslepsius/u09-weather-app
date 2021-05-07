@@ -1,6 +1,23 @@
 import React from 'react';
-import {Current} from './current/Current';
+import Current from './current/Current';
 import Infocard from './infocard/Infocard';
+
+const getTime = (unixTime, type) => {
+  const date = new Date(unixTime * 1000);
+  switch (type){
+  case "HOUR":
+    return date.getHours() + ":00";
+  case "HOUR_MINUTES":
+    return `${date.getHours()}:${date.getMinutes()}`;
+  case "DAY":
+    return new Intl.DateTimeFormat('en-US', { weekday: 'long'}).format(date);
+  default:
+    throw new Error();
+  };
+};
+
+
+const getUrl = id => (`http://openweathermap.org/img/wn/${id}.png`);
 
 const Weatherinfo = ({data, units}) => {
   console.log(data)
@@ -14,4 +31,4 @@ const Weatherinfo = ({data, units}) => {
   )
 };
 
-export default Weatherinfo;
+export {Weatherinfo, getTime, getUrl};

@@ -1,21 +1,6 @@
 import React from 'react';
+import {getTime, getUrl} from '../Weatherinfo';
 
-const getTime = (unixTime, type) => {
-  const date = new Date(unixTime * 1000);
-  switch (type){
-  case "HOUR":
-    return date.getHours() + ":00";
-  case "HOUR_MINUTES":
-    return `${date.getHours()}:${date.getMinutes()}`;
-  case "DAY":
-    return date.getDate();
-  default:
-    throw new Error();
-  };
-};
-
-
-const getUrl = id => (`http://openweathermap.org/img/wn/${id}.png`);
 
 const Current = ({current, units}) => {
   const [currentweather] = current.weather;
@@ -37,4 +22,4 @@ return (
 )
 };
 
-export {Current, getUrl, getTime};
+export default Current;

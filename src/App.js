@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import Weatherinfo from './weatherinfo/Weatherinfo';
+import {Weatherinfo} from './weatherinfo/Weatherinfo';
 
 const weatherReducer = (state, action) => {
   switch (action.type) {
