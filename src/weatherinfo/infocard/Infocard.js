@@ -5,7 +5,7 @@ import { ReactComponent as Raindrop } from "../raindrop.svg";
 
 const Infocard = ({data, daily, units}) => {
 return (
-    <div>
+    <div class="card">
     {data.map(e => 
       <Infoitem key={e.dt} e={e} daily={daily} units={units}/>
       )}
@@ -17,7 +17,7 @@ const Infoitem = ({e, daily, units}) => {
   const description = e.weather[0].description.charAt(0).toUpperCase() + e.weather[0].description.slice(1);
   const [expanded, setExpanded] = React.useState(false);
   return (
-    <>
+    <div class="infoitem">
       <div onClick={() => setExpanded(!expanded)}>
         <img src={getUrl(e.weather[0].icon)} alt=""/>
         {daily ? (
@@ -36,9 +36,13 @@ const Infoitem = ({e, daily, units}) => {
         <p><Raindrop height="13px" /> {e.pop * 100}%</p>
       </div>
       {expanded && <div>
-        HELLoooooo
+        <p>Humidity: {e.humidity}%</p>
+        {daily && <p>
+            <span>Sunrise: {getTime(e.sunrise, "HOUR_MINUTES")}</span><br/>
+            <span>Sunset: {getTime(e.sunset, "HOUR_MINUTES")}</span>
+          </p>}
       </div>}
-    </>)
+    </div>)
 };
 
 export default Infocard;

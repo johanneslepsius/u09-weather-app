@@ -1,3 +1,44 @@
+* {
+  color: white;
+  font-family: english, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.bg-img {
+  background-image: url(./background.jpg);
+  background-attachment: fixed;
+}
+.bg-overlay {
+  background: rgba(0, 0, 0, 0.7);
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-bg {
+  height: 150px;
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+}
+
+.logo {
+  height: 70px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+}
+
+.card {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 /* the toggle button is just modified by me, not written on my own */
 
 .temp-toggle {
@@ -63,7 +104,7 @@
   height: 24px;
   padding: 0;
   border-radius: 30px;
-  background-color: #d4c1c1;
+  background-color: #adadad;
   transition: all 0.2s ease;
 }
 

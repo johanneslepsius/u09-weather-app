@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import {Weatherinfo} from './weatherinfo/Weatherinfo';
+import { ReactComponent as Pentagram } from "./pentagram.svg";
 
 const weatherReducer = (state, action) => {
   switch (action.type) {
@@ -25,9 +26,6 @@ const weatherReducer = (state, action) => {
       throw new Error();
   }
 };
-
-
-
 
 function App() {
 
@@ -94,17 +92,24 @@ function App() {
   }
 
   return (
-    <>
+    <div class="bg-img">
+      <div class="bg-overlay">
+        <div class="header-bg">
+    <header>
+      <h1>TRVE & KALLT</h1>
+      <p class="toggle">Imperial / Metric: <Unittoggle class="togglebtn" onToggle={triggertoggle} temptoggle={temptoggle}/></p>
+    </header>
+    </div>
     {weather.isError && <p>Something went wrong... Please try again later!</p>}
     {weather.isLoading ? (
       <p>Loading...</p>
       ) : (
         <>
-      <Unittoggle onToggle={triggertoggle} temptoggle={temptoggle}/>
       <Weatherinfo data={weather.data} units={units}/>
       </>
       )}
-    </>
+      </div>
+    </div>
   );
 }
 
@@ -113,13 +118,13 @@ const Unittoggle = ({onToggle, temptoggle}) => {
         <div onClick={onToggle} className={`temp-toggle ${temptoggle ? 'temp-toggle--checked' : ''}`}>
             <div className="temp-toggle-container">
                 <div className="temp-toggle-check">
-                    <span>°F</span>
+                    <span><b>°F</b></span>
                 </div>
                 <div className="temp-toggle-uncheck">
-                    <span>°C</span>
+                    <span><b>°C</b></span>
                 </div>
             </div>
-            <div className="temp-toggle-circle"></div>
+            <div className="temp-toggle-circle"><Pentagram /></div>
             {/* <input className="temp-toggle-input" type="checkbox" aria-label="Toggle Button" /> */}
         </div>
     )

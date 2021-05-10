@@ -5,7 +5,7 @@ import {getTime, getUrl} from '../Weatherinfo';
 const Current = ({current, units}) => {
   const [currentweather] = current.weather;
 return (
-  <div>
+  <div class="card">
     <img src={getUrl(currentweather.icon)} alt=""/>
     <p key={currentweather.id}>{currentweather.main}: {currentweather.description}</p>
     <p>
