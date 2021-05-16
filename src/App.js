@@ -1,5 +1,6 @@
 import './App.css';
 import React from 'react';
+import axios from 'axios';
 import {Weatherinfo} from './weatherinfo/Weatherinfo';
 import { ReactComponent as Pentagram } from "./pentagram.svg";
 
@@ -29,28 +30,18 @@ const weatherReducer = (state, action) => {
 
 function App() {
 
-  function getWeather({latitude, longitude}, units) {
-      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&units=${units}&appid=${process.env.REACT_APP_WEATHER_KEY}`)
-        .then(response => response.json())
-        .then(result => {
-          console.log(result);
+  function getWeather (position, units) {
+      axios(`https://api.openweathermap.org/data/2.5/onecall?lat=${position.latitude}&lon=${position.longitude}&exclude=minutely&units=${units}&appid=${process.env.REACT_APP_WEATHER_KEY}`)
+      .then(result => {
           dispatchWeather({
             type: 'WEATHER_FETCH_SUCCESS',
             isLoading: false,
-            payload: result
+            payload: result.data
           })
         })
         .catch(() => 
           dispatchWeather({type: 'WEATHER_FETCH_ERROR'})
         );
-      /*
-      exclude:
-    current
-    minutely
-    hourly
-    daily
-    alerts
-*/
     }
 
   const [curr_position, setCurr_position] = React.useState({});
@@ -87,34 +78,43 @@ function App() {
     } else if (newUnits === 'imperial') {
       setUnits({temp: '°F', wind: 'mph'});
     }
-    
+    // this or useeffect with temptoggle dependency?
+    dispatchWeather({type: 'WEATHER_FETCH_INIT'});
     getWeather(curr_position, newUnits);
   }
 
+  const handleSearch = (event) => {
+    console.log(event)
+  }
+
   return (
-    <div class="bg-img">
-      <div class="bg-overlay">
-        <div class="header-bg">
-    <header>
-      <h1>TRVE & KALLT</h1>
-      <p class="toggle">Imperial / Metric: <Unittoggle class="togglebtn" onToggle={triggertoggle} temptoggle={temptoggle}/></p>
-    </header>
-    </div>
-    {weather.isError && <p>Something went wrong... Please try again later!</p>}
-    {weather.isLoading ? (
-      <p>Loading...</p>
-      ) : (
-        <>
-      <Weatherinfo data={weather.data} units={units}/>
-      </>
-      )}
+    <div className="bg-img">
+      <div className="bg-overlay">
+        <div className="header-bg">
+          <header>
+            <h1>TRVE & KALLT</h1>
+              <Searchbar handleSearch={handleSearch}/>
+            <div className="toggle">Imperial / Metric: 
+              <Unittoggle onToggle={triggertoggle} temptoggle={temptoggle}/>
+            </div>
+          </header>
+        </div>
+        {weather.isError && <p>Something went wrong... Please try again later!</p>}
+        {weather.isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <Weatherinfo data={weather.data} units={units}/>
+        )}
+        <footer>
+          <p>True and kallt is a parody on how Black Metal-Heads describe their music as "true and cult".</p>
+        </footer>
       </div>
     </div>
   );
 }
 
 const Unittoggle = ({onToggle, temptoggle}) => {
-  return(
+  return (
         <div onClick={onToggle} className={`temp-toggle ${temptoggle ? 'temp-toggle--checked' : ''}`}>
             <div className="temp-toggle-container">
                 <div className="temp-toggle-check">
@@ -128,6 +128,16 @@ const Unittoggle = ({onToggle, temptoggle}) => {
             {/* <input className="temp-toggle-input" type="checkbox" aria-label="Toggle Button" /> */}
         </div>
     )
+}
+
+const Searchbar = ({handleSearch}) => {
+  return (
+    <form onSubmit={handleSearch}>
+      <label htmlFor="city">City:</label>
+      <input type="text" name="cityinput" id="cityinput" />
+      <button id="search" type="submit">Search</button>
+    </form>
+  )
 }
 
 export default App;

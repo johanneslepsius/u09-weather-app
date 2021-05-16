@@ -1,4 +1,5 @@
 * {
+  box-sizing: border-box;
   color: white;
   font-family: english, sans-serif;
   font-weight: 400;
@@ -10,19 +11,34 @@
   background-attachment: fixed;
 }
 .bg-overlay {
+  position: relative;
   background: rgba(0, 0, 0, 0.7);
   min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+h1 {
+  margin-right: 20px;
 }
 
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 50px;
 }
 
 .header-bg {
   height: 150px;
   background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+}
+
+footer {
+  background: rgba(0, 0, 0, 0.9);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
 }
 
 .logo {
@@ -32,11 +48,6 @@ header {
 .toggle {
   display: flex;
   align-items: center;
-}
-
-.card {
-  display: flex;
-  background-color: rgba(0, 0, 0, 0.8);
 }
 
 /* the toggle button is just modified by me, not written on my own */
@@ -55,6 +66,7 @@ header {
   user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
+  margin: 0 5px;
 }
 
 /* .temp-toggle-input {
@@ -104,7 +116,7 @@ header {
   height: 24px;
   padding: 0;
   border-radius: 30px;
-  background-color: #adadad;
+  background-color: #797979;
   transition: all 0.2s ease;
 }
 
@@ -130,4 +142,20 @@ header {
 }
 .temp-toggle--checked .temp-toggle-circle {
   left: 27px;
+}
+
+@media (max-width: 800px) {
+  .card {
+    width: 95vw;
+  }
+}
+
+@media (max-width: 500px) {
+  header {
+    flex-direction: column;
+  }
+
+  .contentgroup {
+    flex-direction: column;
+  }
 }
