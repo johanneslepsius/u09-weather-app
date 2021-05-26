@@ -1,3 +1,5 @@
+@import url("https://use.typekit.net/toz8ydd.css");
+
 * {
   box-sizing: border-box;
   color: white;
@@ -19,6 +21,10 @@
 
 h1 {
   margin-right: 20px;
+}
+
+h2 {
+  text-align: center;
 }
 
 header {
@@ -48,6 +54,10 @@ footer {
 .toggle {
   display: flex;
   align-items: center;
+}
+
+#cityinput {
+  color: black;
 }
 
 /* the toggle button is just modified by me, not written on my own */

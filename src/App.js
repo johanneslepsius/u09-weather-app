@@ -28,10 +28,12 @@ const weatherReducer = (state, action) => {
   }
 };
 
+
 function App() {
 
-  function getWeather (position, units) {
-      axios(`https://api.openweathermap.org/data/2.5/onecall?lat=${position.latitude}&lon=${position.longitude}&exclude=minutely&units=${units}&appid=${process.env.REACT_APP_WEATHER_KEY}`)
+  function getWeather (geolocation, units) {
+    if (geolocation.latitude){
+      axios(`https://api.openweathermap.org/data/2.5/onecall?lat=${geolocation.latitude}&lon=${geolocation.longitude}&exclude=minutely&units=${units}&appid=${process.env.REACT_APP_WEATHER_KEY}`)
       .then(result => {
           dispatchWeather({
             type: 'WEATHER_FETCH_SUCCESS',
@@ -42,6 +44,7 @@ function App() {
         .catch(() => 
           dispatchWeather({type: 'WEATHER_FETCH_ERROR'})
         );
+      };
     }
 
   const [curr_position, setCurr_position] = React.useState({});
@@ -68,23 +71,57 @@ function App() {
     navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
   }, []);
 
-  const [temptoggle, settemptoggle] = React.useState(false);
+  const [temptoggle, setTemptoggle] = React.useState(false);
+  // const [temptoggle, toggleTemp] = React.useReducer(previousTemp => !previousTemp, false)
+  const [newUnits, setNewUnits] = React.useState('metric');
 
   const triggertoggle = () => {
-    settemptoggle( !temptoggle );
-    const newUnits = temptoggle ? ('metric') : ('imperial');
+    setTemptoggle(temptoggle => !temptoggle );
+  }
+
+  React.useEffect(() => {
+    setNewUnits(temptoggle ? ('imperial') : ('metric'));
+  }, [temptoggle]);
+
+  React.useEffect(() => {
     if (newUnits === 'metric') {
       setUnits({temp: '°C', wind: 'km/h'});
     } else if (newUnits === 'imperial') {
       setUnits({temp: '°F', wind: 'mph'});
-    }
-    // this or useeffect with temptoggle dependency?
+    };
     dispatchWeather({type: 'WEATHER_FETCH_INIT'});
     getWeather(curr_position, newUnits);
-  }
+  }, [newUnits]);
+
+  const [city, setCity] = React.useState();
 
   const handleSearch = (event) => {
-    console.log(event)
+    event.preventDefault();
+    const spacePosition = searchTerm.indexOf(' ');
+    const actualSearchTerm = searchTerm.substring(0, spacePosition);
+    setCity(searchTerm);
+    const chosenCity = suggestions.find(el => el.name === actualSearchTerm);
+    console.log(newUnits, "search");
+    dispatchWeather({type: 'WEATHER_FETCH_INIT'});
+    setCurr_position(chosenCity.geolocation);
+    getWeather(chosenCity.geolocation, newUnits);
+  }
+
+  const [suggestions, setSuggestions] = React.useState('');
+  const [searchTerm, setSearchTerm] = React.useState('');
+
+  const handleChange = (event) => {
+    if (event.target.value.length > 3) {
+      axios.get(`http://localhost:8000/?query=${event.target.value}`)
+      .then(response => {
+        console.log(response.data);
+        setSearchTerm(event.target.value);
+        if (response.data.length) {
+          setSuggestions(response.data);
+        }
+        })
+      .catch(error => console.log(error))
+    }
   }
 
   return (
@@ -93,8 +130,8 @@ function App() {
         <div className="header-bg">
           <header>
             <h1>TRVE & KALLT</h1>
-              <Searchbar handleSearch={handleSearch}/>
-            <div className="toggle">Imperial / Metric: 
+            <Searchbar handleSearch={handleSearch} handleChange={handleChange} suggestions={suggestions} />
+            <div className="toggle">Metric / Imperial: 
               <Unittoggle onToggle={triggertoggle} temptoggle={temptoggle}/>
             </div>
           </header>
@@ -103,7 +140,10 @@ function App() {
         {weather.isLoading ? (
           <p>Loading...</p>
         ) : (
+          <>
+          {city && <h2>Weather in {city}</h2>}
           <Weatherinfo data={weather.data} units={units}/>
+          </>
         )}
         <footer>
           <p>True and kallt is a parody on how Black Metal-Heads describe their music as "true and cult".</p>
@@ -130,11 +170,16 @@ const Unittoggle = ({onToggle, temptoggle}) => {
     )
 }
 
-const Searchbar = ({handleSearch}) => {
+const Searchbar = ({handleSearch, handleChange, suggestions}) => {
   return (
     <form onSubmit={handleSearch}>
       <label htmlFor="city">City:</label>
-      <input type="text" name="cityinput" id="cityinput" />
+      <input onChange={handleChange} autoComplete="off" type="text" name="cityinput" id="cityinput" list="suggestions" />
+      <datalist id="suggestions">
+        <>
+        {suggestions && suggestions.map((suggestion, i) => <option key={i} value={`${suggestion.name} (${suggestion.country})`} />)}
+        </>
+      </datalist>
       <button id="search" type="submit">Search</button>
     </form>
   )
