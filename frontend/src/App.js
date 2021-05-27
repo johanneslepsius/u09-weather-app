@@ -30,8 +30,9 @@ const weatherReducer = (state, action) => {
 
 
 function App() {
-
+// do i need async?
   function getWeather (geolocation, units) {
+    // when removing the if stmt some /&¤%¤&)^^^** function(probably line 94) calls this with undefined
     if (geolocation.latitude){
       axios(`https://api.openweathermap.org/data/2.5/onecall?lat=${geolocation.latitude}&lon=${geolocation.longitude}&exclude=minutely&units=${units}&appid=${process.env.REACT_APP_WEATHER_KEY}`)
       .then(result => {
@@ -49,7 +50,7 @@ function App() {
 
   const [curr_position, setCurr_position] = React.useState({});
 
-  const [units, setUnits] = React.useState({temp: '°C', wind: 'km/h'})
+  const [units, setUnits] = React.useState({temp: '°C', wind: 'km/h'});
 
   const [weather, dispatchWeather] = React.useReducer(
     weatherReducer,
@@ -77,8 +78,9 @@ function App() {
 
   const triggertoggle = () => {
     setTemptoggle(temptoggle => !temptoggle );
+    setNewUnits(temptoggle ? ('imperial') : ('metric'));
   }
-
+  // do i need useeffect here?? only way i found to make it work properly
   React.useEffect(() => {
     setNewUnits(temptoggle ? ('imperial') : ('metric'));
   }, [temptoggle]);
@@ -90,7 +92,10 @@ function App() {
       setUnits({temp: '°F', wind: 'mph'});
     };
     dispatchWeather({type: 'WEATHER_FETCH_INIT'});
+    // something calls getweather with undefined position when starting
     getWeather(curr_position, newUnits);
+    // react wants me to add curr_position to dependency array, but i dont want to
+    //  run this code when currposition is updated?? sooo ?
   }, [newUnits]);
 
   const [city, setCity] = React.useState();
@@ -109,10 +114,19 @@ function App() {
 
   const [suggestions, setSuggestions] = React.useState('');
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [disableSearch, setDisableSearch] = React.useState(true);
+
+  let cancelToken;
 
   const handleChange = (event) => {
     if (event.target.value.length > 3) {
-      axios.get(`http://localhost:8000/?query=${event.target.value}`)
+      if (cancelToken !== undefined) {
+        cancelToken.cancel("aborted due to new request");
+      }
+
+      cancelToken = axios.CancelToken.source();
+
+      axios.get(`http://localhost:8000/?query=${event.target.value}`, {cancelToken: cancelToken.token})
       .then(response => {
         console.log(response.data);
         setSearchTerm(event.target.value);
@@ -124,13 +138,18 @@ function App() {
     }
   }
 
+  const enableSearch = () => {
+    console.log("raccoon")
+    setDisableSearch(!disableSearch)
+  }
+
   return (
     <div className="bg-img">
       <div className="bg-overlay">
         <div className="header-bg">
           <header>
             <h1>TRVE & KALLT</h1>
-            <Searchbar handleSearch={handleSearch} handleChange={handleChange} suggestions={suggestions} />
+            <Searchbar disableSearch={disableSearch} enableSearch={enableSearch} handleSearch={handleSearch} handleChange={handleChange} suggestions={suggestions} />
             <div className="toggle">Metric / Imperial: 
               <Unittoggle onToggle={triggertoggle} temptoggle={temptoggle}/>
             </div>
@@ -170,17 +189,18 @@ const Unittoggle = ({onToggle, temptoggle}) => {
     )
 }
 
-const Searchbar = ({handleSearch, handleChange, suggestions}) => {
+const Searchbar = ({disableSearch, enableSearch, handleSearch, handleChange, suggestions}) => {
+  console.log(disableSearch)
   return (
     <form onSubmit={handleSearch}>
       <label htmlFor="city">City:</label>
       <input onChange={handleChange} autoComplete="off" type="text" name="cityinput" id="cityinput" list="suggestions" />
       <datalist id="suggestions">
         <>
-        {suggestions && suggestions.map((suggestion, i) => <option key={i} value={`${suggestion.name} (${suggestion.country})`} />)}
+        {suggestions && suggestions.map((suggestion, i) => <option key={i} onClick={enableSearch} value={`${suggestion.name} (${suggestion.country})`} />)}
         </>
       </datalist>
-      <button id="search" type="submit">Search</button>
+      <button className="searchsubmit" disabled={ disableSearch ? true : false } id="search" type="submit">Search</button>
     </form>
   )
 }

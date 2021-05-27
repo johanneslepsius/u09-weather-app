@@ -60,6 +60,9 @@ footer {
   color: black;
 }
 
+.searchsubmit:disabled {
+}
+
 /* the toggle button is just modified by me, not written on my own */
 
 .temp-toggle {
