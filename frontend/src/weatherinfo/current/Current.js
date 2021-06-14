@@ -8,9 +8,7 @@ const Current = ({current, units}) => {
   const [currentweather] = current.weather;
   const [expanded, setExpanded] = React.useState(false);
 return (
-  <>
-  <button type="button" onClick={() => setExpanded(!expanded)}>{expanded ? "Minimize" : "Expand"}</button>
-  <div className="card current">
+  <div className="card current" onClick={() => setExpanded(!expanded)}>
     <div className="infocontent">
     <p>Current: </p>
     <div className="contentgroup">
@@ -31,7 +29,6 @@ return (
       <p>Clouds:&nbsp;{current.clouds}%</p>
     </div>}
   </div>
-  </>
 )
 };
 

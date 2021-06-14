@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Weatherinfo} from './weatherinfo/Weatherinfo';
 import { ReactComponent as Pentagram } from "./pentagram.svg";
@@ -32,11 +32,11 @@ const weatherReducer = (state, action) => {
 
 function App() {
   // 
-  const [curr_position, setCurr_position] = React.useState({});
+  const [curr_position, setCurr_position] = useState({});
   // the current position
   // let curr_position = {};
   // the units to display for the user (not for data fetching)
-  const [units, setUnits] = React.useState({temp: '°C', wind: 'km/h'});
+  const [units, setUnits] = useState({temp: '°C', wind: 'km/h'});
 
   const [weather, dispatchWeather] = React.useReducer(
     weatherReducer,
@@ -62,7 +62,7 @@ function App() {
 
   
 // this is where the app starts when loading first
-  React.useEffect(() => {
+  useEffect(() => {
     dispatchWeather({type: 'WEATHER_FETCH_INIT'});
 
     // callback functions for getting position from the  browsers´ geolocation api
@@ -79,21 +79,20 @@ function App() {
   }, []);
 
   // false is metric, true is imperial units, could be a simple variable, i know, but only works as state
-  const [temptoggle, setTemptoggle] = React.useState(false);
+  const [temptoggle, setTemptoggle] = useState(false);
 
   // units to use for api call. could be a simple variable, i know, but only works as state
-  const [newUnits, setNewUnits] = React.useState('metric');
+  const [newUnits, setNewUnits] = useState('metric');
 
   const triggertoggle = () => {
     setTemptoggle(temptoggle => !temptoggle );
-    setNewUnits(temptoggle ? ('imperial') : ('metric'));
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     setNewUnits(temptoggle ? ('imperial') : ('metric'));
   }, [temptoggle]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (newUnits === 'metric') {
       setUnits({temp: '°C', wind: 'km/h'});
     } else if (newUnits === 'imperial') {
@@ -105,8 +104,8 @@ function App() {
     //  run this effect when curr_position is updated?? sooo ?
   }, [newUnits]);
 
-  const [city, setCity] = React.useState();
-  const [searchTerm, setSearchTerm] = React.useState('');
+  const [city, setCity] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -161,17 +160,17 @@ function App() {
     
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatchWeather({type: 'WEATHER_FETCH_INIT'});
     getWeather(curr_position, newUnits);
   }, [curr_position])
 
   // the array of suggestions, to be displayed as datalist options
-  const [suggestions, setSuggestions] = React.useState('');
+  const [suggestions, setSuggestions] = useState('');
   // dis-/enabling the search button, since i have to read the geolocation 
   // from the chosen city before making a weather request. 
   // the one call api doesn´t seem to support searching for city names.
-  const [disableSearch, setDisableSearch] = React.useState(true);
+  const [disableSearch, setDisableSearch] = useState(true);
 
   let cancelToken;
 

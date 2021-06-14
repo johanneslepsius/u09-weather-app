@@ -8,7 +8,7 @@ main {
   width: 70vw;
   overflow-x: auto;
   margin: 0 0 40px 0;
-  border-radius: 0 15px 15px 15px;
+  border-radius: 15px;
   box-shadow: 0 0 20px 1px rgba(255, 255, 255, 0.1);
   text-align: center;
 }
@@ -23,22 +23,6 @@ main {
 
 .card.current * {
   margin: 0 10px;
-}
-
-button {
-  background-color: rgba(0, 66, 92, 0.8);
-  border-style: none;
-  cursor: pointer;
-  border-radius: 10px 10px 0 0;
-  padding: 5px 10px;
-}
-
-button:hover {
-  background-color: rgba(0, 66, 92, 0.4);
-}
-
-button:focus {
-  outline: none;
 }
 
 .infoitem {

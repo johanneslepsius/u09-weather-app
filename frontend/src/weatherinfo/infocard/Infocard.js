@@ -5,29 +5,25 @@ import { ReactComponent as Arrow } from "../arrow.svg";
 
 
 const Infocard = ({data, daily, units}) => {
-  const [expanded, setExpanded] = React.useState(false);
 return (
-  <>
-    <button type="button" onClick={() => setExpanded(!expanded)}>{expanded ? "Minimize" : "Expand"}</button>
     <div className="card">
     {data.map(e => 
       <Infoitem 
         key={e.dt} 
         e={e} 
         daily={daily} 
-        units={units} 
-        expanded={expanded}
+        units={units}
       />
       )}
       </div>
-  </>
 );
 };
 
-const Infoitem = ({e, daily, units, expanded}) => {
+const Infoitem = ({e, daily, units}) => {
+  const [expanded, setExpanded] = React.useState(false);
   const description = e.weather[0].description.charAt(0).toUpperCase() + e.weather[0].description.slice(1);
   return (
-    <div className="infoitem">
+    <div className="infoitem" onClick={() => setExpanded(!expanded)}>
       <div className="infocontent">
         {daily ? (
           <div className="contentgroup">

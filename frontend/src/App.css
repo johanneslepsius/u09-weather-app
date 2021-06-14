@@ -84,6 +84,16 @@ footer {
   color: black;
 }
 
+button {
+  border-style: none;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+button:focus {
+  outline: none;
+}
+
 .searchsubmit:disabled {
   cursor: default;
 }
