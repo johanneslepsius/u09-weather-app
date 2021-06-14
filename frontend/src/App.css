@@ -19,9 +19,9 @@
   padding-bottom: 40px;
 }
 
-h1 {
-  margin-right: 20px;
-}
+/* h1 { */
+/* margin-right: 20px; */
+/* } */
 
 h2 {
   text-align: center;
@@ -56,11 +56,41 @@ footer {
   align-items: center;
 }
 
+.searchbar {
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 0 20px;
+  align-items: center;
+}
+
+.searchbar > * {
+  height: 30px;
+}
+
 #cityinput {
+  color: black;
+  border: none;
+}
+
+.citylabel {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 5px;
+  border-radius: 20px 0 0 20px;
+}
+
+.citylabeltext {
   color: black;
 }
 
 .searchsubmit:disabled {
+  cursor: default;
+}
+
+#search {
+  border-radius: 0 20px 20px 0;
+  background-color: white;
 }
 
 /* the toggle button is just modified by me, not written on my own */
@@ -161,11 +191,23 @@ footer {
   .card {
     width: 95vw;
   }
+
+  header {
+    padding: 0 10px;
+  }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 530px) {
   header {
     flex-direction: column;
+  }
+
+  h1 {
+    margin: 10px;
+  }
+
+  .toggle {
+    margin: 10px;
   }
 
   .contentgroup {
