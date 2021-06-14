@@ -17,7 +17,9 @@ return (
     </div>
     <div className="contentgroup">
       <p>{Math.round(current.temp)}{units.temp}</p>
-      <p>Wind:&nbsp;{Math.round(current.wind_speed * 3.6)}&nbsp;{units.wind}<Arrow height="13px" style={{transform: `rotate(${current.wind_deg}deg`}}/></p>
+      <p>Wind:&nbsp;{Math.round(current.wind_speed * 3.6)}&nbsp;{units.wind}
+        <Arrow height="13px" style={{transform: `rotate(${current.wind_deg}deg`}}/>
+      </p>
     </div>
     </div>
     {expanded && <div className="infocontent">

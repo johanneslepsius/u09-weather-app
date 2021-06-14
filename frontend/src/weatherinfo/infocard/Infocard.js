@@ -41,8 +41,13 @@ const Infoitem = ({e, daily, units}) => {
           <p key={e.weather[0].id}>{description}</p>
         </div>
         <div className="contentgroup">
-          <p>Wind:&nbsp;{Math.round(e.wind_speed * 3.6)}&nbsp;{units.wind}<Arrow height="13px" style={{transform: `rotate(${e.wind_deg}deg`}}/></p>
-          <p><Raindrop height="13px" />{Math.round(e.pop * 100)}%</p>
+          <p>Wind:&nbsp;{Math.round(e.wind_speed * 3.6)}&nbsp;{units.wind}
+            <Arrow height="13px" style={{transform: `rotate(${e.wind_deg}deg`}}/>
+          </p>
+          <p>
+            <Raindrop height="13px" />
+            {Math.round(e.pop * 100)}%
+          </p>
         </div>
         </div>
       {expanded && <div className="infocontent">

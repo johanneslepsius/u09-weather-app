@@ -2,7 +2,6 @@ import './App.css';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Weatherinfo} from './weatherinfo/Weatherinfo';
-import { ReactComponent as Pentagram } from "./pentagram.svg";
 import { ReactComponent as Searchbtn } from "./search.svg";
 
 const weatherReducer = (state, action) => {
@@ -31,10 +30,7 @@ const weatherReducer = (state, action) => {
 
 
 function App() {
-  // 
   const [curr_position, setCurr_position] = useState({});
-  // the current position
-  // let curr_position = {};
   // the units to display for the user (not for data fetching)
   const [units, setUnits] = useState({temp: '°C', wind: 'km/h'});
 
@@ -43,7 +39,6 @@ function App() {
     {data: {}, isLoading: true, isError: false}
   );
 
-  // async await or then?
   function getWeather (geolocation, units) {
     if (geolocation.latitude){
       axios(process.env.REACT_APP_BASE_URL + `?lat=${geolocation.latitude}&lon=${geolocation.longitude}&exclude=minutely&units=${units}&appid=${process.env.REACT_APP_WEATHER_KEY}`)
@@ -111,53 +106,10 @@ function App() {
     e.preventDefault();
     setDisableSearch(true)
     setCity(searchTerm);
-    console.log({searchTerm})
     const spacePosition = searchTerm.lastIndexOf(' ');
     const actualSearchTerm = searchTerm.substring(0, spacePosition);
-    // debugger;
     const chosenCity = suggestions.find(el => el.name === actualSearchTerm);
     setCurr_position(chosenCity.geolocation);
-    console.log(curr_position);
-    // let chosenCity;
-    // async function chooseCity() {
-      // const chosenCity = suggestions.find(el => el.name === actualSearchTerm);
-      // if (chosenCity !== undefined){
-        // console.log('not undefined!')
-        // return chosenCity;
-      // }
-    // };
-    
-    // const chosenCity = await suggestions.find(el => el.name === actualSearchTerm);
-    // let chosenCity;
-    // const chooseCity = async (_callback) => {
-      // chosenCity = suggestions.find(el => el.name === actualSearchTerm);
-      // _callback()
-    // }
-    
-    // console.log(newUnits, "search");
-    // dispatchWeather({type: 'WEATHER_FETCH_INIT'});
-    
-
-    // chooseCity()
-      // .then( chosenCity => {
-        // console.log(chosenCity, "asdfasghfr")
-        // if (chosenCity !== undefined){
-          // curr_position = chosenCity.geolocation
-          // getWeather(chosenCity.geolocation, newUnits)
-        // }
-        // return chosenCity;
-      // })
-    // setCurr_position(chosenCity.geolocation);
-    // getWeather(chosenCity.geolocation, newUnits);
-    
-    // const setPosGetWeather = () => {
-      // chooseCity(() => {
-        // setCurr_position(chosenCity.geolocation);
-        // getWeather(chosenCity.geolocation, newUnits);
-      // })
-    // }
-    
-    
   }
 
   useEffect(() => {
@@ -182,20 +134,18 @@ function App() {
       const spacePosition = e.target.value.lastIndexOf(' ');
       const inputChosenCity = e.target.value.substring(0, spacePosition);
       const cityMatch = suggestions && suggestions.filter(suggestion => suggestion.name === inputChosenCity);
-      // console.log({cityMatch});
       cityMatch.length && setDisableSearch(false);
+
+      setSearchTerm(e.target.value);
 
       if (cancelToken !== undefined) {
         cancelToken.cancel("aborted due to new request");
       }
 
       cancelToken = axios.CancelToken.source();
-      setSearchTerm(e.target.value);
 
       axios.get(`http://localhost:8000/?query=${e.target.value}`, {cancelToken: cancelToken.token})
       .then(response => {
-        console.log(response.data, "response")
-        
         if (response.data.length) {
           setSuggestions(response.data);
         }
@@ -210,9 +160,17 @@ function App() {
         <div className="header-bg">
           <header>
             <h1>TRVE&nbsp;& KALLT</h1>
-            <Searchbar disableSearch={disableSearch} handleSearch={handleSearch} handleChange={handleChange} suggestions={suggestions} />
+            <Searchbar 
+              disableSearch={disableSearch} 
+              handleSearch={handleSearch} 
+              handleChange={handleChange} 
+              suggestions={suggestions} 
+            />
             <div className="toggle">Metric / Imperial: 
-              <Unittoggle onToggle={triggertoggle} temptoggle={temptoggle}/>
+              <Unittoggle 
+                onToggle={triggertoggle} 
+                temptoggle={temptoggle}
+              />
             </div>
           </header>
         </div>
@@ -222,7 +180,10 @@ function App() {
         ) : (
           <>
           {city && <h2>Weather in {city}</h2>}
-          <Weatherinfo data={weather.data} units={units}/>
+          <Weatherinfo 
+            data={weather.data} 
+            units={units}
+          />
           </>
         )}
         <footer>
@@ -244,25 +205,40 @@ const Unittoggle = ({onToggle, temptoggle}) => {
                     <span><b>°C</b></span>
                 </div>
             </div>
-            <div className="temp-toggle-circle"><Pentagram /></div>
+            <div className="temp-toggle-circle"></div>
             {/* <input className="temp-toggle-input" type="checkbox" aria-label="Toggle Button" /> */}
         </div>
     )
 }
 
 const Searchbar = ({disableSearch, handleSearch, handleChange, suggestions}) => {
-  console.log({disableSearch})
   return (
     <form className="searchbar" onSubmit={handleSearch}>
-      <label htmlFor="city" className="citylabel" ><div className="citylabeltext" >City:</div></label>
-      <input onChange={handleChange} autoComplete="off" type="text" name="cityinput" id="cityinput" list="suggestions" />
+      <label htmlFor="city" className="citylabel" >
+        <div className="citylabeltext" >City:</div>
+      </label>
+      <input 
+        onChange={handleChange} 
+        autoComplete="off" 
+        type="text" 
+        name="cityinput" 
+        id="cityinput" 
+        list="suggestions" 
+      />
       <datalist id="suggestions">
         <>
         {/* WHY wont this show <option key="f***" value="Loading" /> */}
+        <option key="f***" value="Loading" />
         {suggestions && suggestions.map((suggestion, i) => <option key={i} value={`${suggestion.name} ${suggestion.country}`} />)}
         </>
       </datalist>
-      <button className="searchsubmit" disabled={ disableSearch } id="search" type="submit"><Searchbtn width="16px" /></button>
+      <button className="searchsubmit" 
+        disabled={disableSearch} 
+        id="search" 
+        type="submit"
+      >
+        <Searchbtn width="16px" />
+      </button>
     </form>
   )
 }
