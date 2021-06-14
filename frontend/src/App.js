@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Weatherinfo} from './weatherinfo/Weatherinfo';
 import { ReactComponent as Searchbtn } from "./search.svg";
+import { ReactComponent as Positionbtn } from "./position.svg";
 
 const weatherReducer = (state, action) => {
   switch (action.type) {
@@ -58,19 +59,7 @@ function App() {
   
 // this is where the app starts when loading first
   useEffect(() => {
-    dispatchWeather({type: 'WEATHER_FETCH_INIT'});
-
-    // callback functions for getting position from the  browsers´ geolocation api
-    const positionSuccess = position => {
-      setCurr_position(position.coords);
-      getWeather(curr_position, 'metric');
-    };
-
-    const positionError = error => {
-      alert(`ERROR(${error.code}): ${error.message}`);
-    };
-
-    navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
+    getUserPosition();
   }, []);
 
   // false is metric, true is imperial units, could be a simple variable, i know, but only works as state
@@ -119,6 +108,7 @@ function App() {
 
   // the array of suggestions, to be displayed as datalist options
   const [suggestions, setSuggestions] = useState('');
+
   // dis-/enabling the search button, since i have to read the geolocation 
   // from the chosen city before making a weather request. 
   // the one call api doesn´t seem to support searching for city names.
@@ -154,6 +144,22 @@ function App() {
     }
   }
 
+  const getUserPosition = () => {
+    dispatchWeather({type: 'WEATHER_FETCH_INIT'});
+
+    // callback functions for getting position from the  browsers´ geolocation api
+    const positionSuccess = position => {
+      setCurr_position(position.coords);
+      getWeather(curr_position, 'metric');
+    };
+
+    const positionError = error => {
+      alert(`ERROR(${error.code}): ${error.message}`);
+    };
+
+    navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
+  }
+
   return (
     <div className="bg-img">
       <div className="bg-overlay">
@@ -178,16 +184,20 @@ function App() {
         {weather.isLoading ? (
           <p>Loading...</p>
         ) : (
-          <>
-          {city && <h2>Weather in {city}</h2>}
           <Weatherinfo 
             data={weather.data} 
             units={units}
+            city={city}
           />
-          </>
         )}
         <footer>
           <p>True and kallt is a parody on how Black Metal-Heads describe their music as "true and cult".</p>
+          <div 
+              className="positionbtn"
+              onClick={getUserPosition}
+            >
+              <Positionbtn width="45px" />
+            </div>
         </footer>
       </div>
     </div>
@@ -199,10 +209,10 @@ const Unittoggle = ({onToggle, temptoggle}) => {
         <div onClick={onToggle} className={`temp-toggle ${temptoggle ? 'temp-toggle--checked' : ''}`}>
             <div className="temp-toggle-container">
                 <div className="temp-toggle-check">
-                    <span><b>°F</b></span>
+                    <span><b>&#129301;</b></span>
                 </div>
                 <div className="temp-toggle-uncheck">
-                    <span><b>°C</b></span>
+                    <span><b>&#127891;</b></span>
                 </div>
             </div>
             <div className="temp-toggle-circle"></div>

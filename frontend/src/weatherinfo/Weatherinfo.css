@@ -51,3 +51,9 @@ main {
   text-align: center;
   margin: 0 5px;
 }
+
+@media (max-width: 600px) {
+  .card {
+    width: 90vw;
+  }
+}

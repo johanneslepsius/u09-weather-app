@@ -19,11 +19,13 @@ const getTime = (unixTime, type) => {
 
 const getUrl = id => (`http://openweathermap.org/img/wn/${id}.png`);
 
-const Weatherinfo = ({data, units}) => {
+const Weatherinfo = ({data, units, city}) => {
   const everyThirdHour = data.hourly.filter((e, i) => i % 3 === 2 && i < 24);
   return(
     <main>
       <div id="content">
+        {city && <h2>Weather in {city}</h2>}
+        <p>Click items to show more info</p>
         <Current current={data.current} units={units} />
         <Infocard 
           key={'hours'} 
