@@ -1,6 +1,8 @@
 # About
 
 A simple weather app, built with React (and a teeny tiny bit of PHP), using the openweathermap API.
+I made this for a good friend of mine, a metalhead and master of puns who gave me the ideas for this theme.
+(He describes his music as true and cult, therefore the name - true and kallt)
 
 ## Try it
 
