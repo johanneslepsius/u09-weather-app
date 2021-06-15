@@ -1,9 +1,10 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-$citiesJSON = file_get_contents('./city.list.json');
+$citiesJSON = file_get_contents('./citylist.json');
 $cities = json_decode($citiesJSON, true);
 
 $query = $_GET['query'];
+var_dump($query);
 $citiesResponse = [];
 
 if ($query) {

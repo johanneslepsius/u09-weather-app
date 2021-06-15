@@ -17,7 +17,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "pushToHeroku": "cd ../ && git subtree push --prefix frontend heroku-tak-frontend master || true"
+    "publishFrontend": "cd ../ && git subtree push --prefix frontend heroku-tak-frontend master || true",
+    "publishBackend": "cd ../ && git subtree push --prefix backend heroku-tak-autocomplete master || true"
   },
   "eslintConfig": {
     "extends": [
