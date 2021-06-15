@@ -42,7 +42,7 @@ function App() {
 
   function getWeather (geolocation, units) {
     if (geolocation.latitude){
-      axios(process.env.REACT_APP_BASE_URL + `?lat=${geolocation.latitude}&lon=${geolocation.longitude}&exclude=minutely&units=${units}&appid=${process.env.REACT_APP_WEATHER_KEY}`)
+      axios(`${process.env.REACT_APP_BASE_URL}?lat=${geolocation.latitude}&lon=${geolocation.longitude}&exclude=minutely&units=${units}&appid=${process.env.REACT_APP_WEATHER_KEY}`)
       .then(result => {
         dispatchWeather({
           type: 'WEATHER_FETCH_SUCCESS',
@@ -134,7 +134,7 @@ function App() {
 
       cancelToken = axios.CancelToken.source();
 
-      axios.get(`http://localhost:8000/?query=${e.target.value}`, {cancelToken: cancelToken.token})
+      axios.get(`${process.env.REACT_APP_AUTOCOMPLETE}/?query=${e.target.value}`, {cancelToken: cancelToken.token})
       .then(response => {
         if (response.data.length) {
           setSuggestions(response.data);

@@ -12,5 +12,6 @@ A simple weather app, built with React (and a teeny tiny bit of PHP), using the 
 
    - your openweathermap app id in REACT_APP_WEATHER_KEY=
    - REACT_APP_BASE_URL=https://api.openweathermap.org/data/2.5/onecall
+   - REACT_APP_AUTOCOMPLETE=http://localhost:8000
 
 4. also in frontend, open a new terminal and run npm start
