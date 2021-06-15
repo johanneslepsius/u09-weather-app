@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "pushToHeroku": "cd ../ && git subtree push --prefix backend heroku-tak-autocomplete master || true"
+    }
+}
