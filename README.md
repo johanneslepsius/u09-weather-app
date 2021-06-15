@@ -2,7 +2,9 @@
 
 A simple weather app, built with React (and a teeny tiny bit of PHP), using the openweathermap API.
 I made this for a good friend of mine, a metalhead and master of puns who gave me the ideas for this theme.
-(He describes his music as true and cult, therefore the name - true and kallt)
+(He describes his music as true and cult, therefore the name - true and kallt).
+
+Try it out on https://tak-frontend.herokuapp.com/
 
 ## Try it
 
@@ -16,5 +18,5 @@ I made this for a good friend of mine, a metalhead and master of puns who gave m
    - REACT_APP_BASE_URL=https://api.openweathermap.org/data/2.5/onecall
    - REACT_APP_AUTOCOMPLETE=http://localhost:8000
 
-4. also in frontend, open a new terminal and run 
-`npm install`, and when that is done, `npm start`
+4. also in frontend, open a new terminal and run
+   `npm install`, and when that is done, `npm start`
