@@ -14,5 +14,4 @@ A simple weather app, built with React (and a teeny tiny bit of PHP), using the 
    - REACT_APP_BASE_URL=https://api.openweathermap.org/data/2.5/onecall
 
 4. also in frontend, open a new terminal and run 
-`npm install` 
-`npm start`
+`npm install`, and when that is done, `npm start`
